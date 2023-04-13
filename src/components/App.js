@@ -10,15 +10,25 @@ import {
   loadExchange
  } from '../store/interactions';
 
+import Navbar from './Navbar';
+
 function App() {
 
+  //reducerにactionを送るためのdispatch関数を読み込む
   const dispatch = useDispatch()
 
+  //ブロックチェーンから各情報を読み込んで、storeに保存
   const loadBlockchainData = async ()=>{
     const provider = loadProvider(dispatch)
     const chainId = await loadNetwork(provider, dispatch)
+
+    window.ethereum.on('chainChanged', () => {
+      window.location.reload()
+    })
     
-    await loadAccount(provider, dispatch)
+    window.ethereum.on('accountsChanged', () => {
+      loadAccount(provider, dispatch)
+    })
 
     const DApp = config[chainId].DApp
     const mETH = config[chainId].mETH
@@ -34,8 +44,7 @@ function App() {
 
   return (
     <div>
-
-      {/* Navbar */}
+      <Navbar/>
 
       <main className='exchange grid'>
         <section className='exchange__section--left grid'>
