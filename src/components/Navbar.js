@@ -53,7 +53,7 @@ const Navbar = () => {
         )}
         {account ? (
           <a 
-            href={`${config[chainId].explorerURL}/address/${account}`}
+            href={config[chainId] ? `${config[chainId].explorerURL}/address/${account}` : `#`}
             target='_blank'
             rel='noreferrer'
           >
