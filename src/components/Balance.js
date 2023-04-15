@@ -1,15 +1,18 @@
-import { useEffect, useRef, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import dapp from '../assets/dapp.svg'
-import eth from '../assets/eth.svg'
+import dapp from '../assets/dapp.svg';
+import eth from '../assets/eth.svg';
 
-import { loadBalances, transferTokens } from '../store/interactions';
+import {
+  loadBalances,
+  transferTokens
+} from '../store/interactions';
 
 const Balance = () => {
   const [isDeposit, setIsDeposit] = useState(true)
-  const [token1TransferAmount, setToken1TransferAmount] = useState(0);
-  const [token2TransferAmount, setToken2TransferAmount] = useState(0);
+  const [token1TransferAmount, setToken1TransferAmount] = useState(0)
+  const [token2TransferAmount, setToken2TransferAmount] = useState(0)
 
   const dispatch = useDispatch()
 
@@ -28,7 +31,7 @@ const Balance = () => {
   const withdrawRef = useRef(null)
 
   const tabHandler = (e) => {
-    if(e.target.className !== depositRef.current.className){
+    if(e.target.className !== depositRef.current.className) {
       e.target.className = 'tab tab--active'
       depositRef.current.className = 'tab'
       setIsDeposit(false)
@@ -40,7 +43,7 @@ const Balance = () => {
   }
 
   const amountHandler = (e, token) => {
-    if(token.address === tokens[0].address) {
+    if (token.address === tokens[0].address) {
       setToken1TransferAmount(e.target.value)
     } else {
       setToken2TransferAmount(e.target.value)
@@ -49,7 +52,8 @@ const Balance = () => {
 
   const depositHandler = (e, token) => {
     e.preventDefault()
-    if(token.address === tokens[0].address) {
+
+    if (token.address === tokens[0].address) {
       transferTokens(provider, exchange, 'Deposit', token, token1TransferAmount, dispatch)
       setToken1TransferAmount(0)
     } else {
@@ -60,7 +64,8 @@ const Balance = () => {
 
   const withdrawHandler = (e, token) => {
     e.preventDefault()
-    if(token.address === tokens[0].address) {
+
+    if (token.address === tokens[0].address) {
       transferTokens(provider, exchange, 'Withdraw', token, token1TransferAmount, dispatch)
       setToken1TransferAmount(0)
     } else {
@@ -73,15 +78,15 @@ const Balance = () => {
     if(exchange && tokens[0] && tokens[1] && account) {
       loadBalances(exchange, tokens, account, dispatch)
     }
-  }, [exchange, tokens, account, transferInProgress])
+  }, [exchange, tokens, account, transferInProgress, dispatch])
 
   return (
     <div className='component exchange__transfers'>
       <div className='component__header flex-between'>
         <h2>Balance</h2>
         <div className='tabs'>
-          <button onClick={tabHandler} className='tab tab--active' ref={depositRef}>Deposit</button>
-          <button onClick={tabHandler} className='tab' ref={withdrawRef}>Withdraw</button>
+          <button onClick={tabHandler} ref={depositRef} className='tab tab--active'>Deposit</button>
+          <button onClick={tabHandler} ref={withdrawRef} className='tab'>Withdraw</button>
         </div>
       </div>
 
@@ -89,9 +94,9 @@ const Balance = () => {
 
       <div className='exchange__transfers--form'>
         <div className='flex-between'>
-          <p><small>Token</small><br/><img src={dapp} alt="Token Logo"/>{symbols && symbols[0]}</p>
-          <p><small>Wallet</small><br/>{ tokenBalances && tokenBalances[0] }</p>
-          <p><small>Exchange</small><br/>{ exchangeBalances && exchangeBalances[0] }</p>
+          <p><small>Token</small><br /><img src={dapp} alt="Token Logo" />{symbols && symbols[0]}</p>
+          <p><small>Wallet</small><br />{tokenBalances && tokenBalances[0]}</p>
+          <p><small>Exchange</small><br />{exchangeBalances && exchangeBalances[0]}</p>
         </div>
 
         <form onSubmit={isDeposit ? (e) => depositHandler(e, tokens[0]) : (e) => withdrawHandler(e, tokens[0])}>
@@ -101,11 +106,14 @@ const Balance = () => {
             id='token0'
             placeholder='0.0000'
             value={token1TransferAmount === 0 ? '' : token1TransferAmount}
-            onChange={(e) => amountHandler(e, tokens[0])}
-          />
+            onChange={(e) => amountHandler(e, tokens[0])}/>
 
           <button className='button' type='submit'>
-            { isDeposit ? <span>Deposit</span> : <span>Withdraw</span> }
+            {isDeposit ? (
+                <span>Deposit</span>
+            ) : (
+                <span>Withdraw</span>
+            )}
           </button>
         </form>
       </div>
@@ -116,23 +124,27 @@ const Balance = () => {
 
       <div className='exchange__transfers--form'>
         <div className='flex-between'>
-          <p><small>Token</small><br/><img src={eth} alt="Token Logo"/>{symbols && symbols[1]}</p>
-          <p><small>Wallet</small><br/>{ tokenBalances && tokenBalances[1] }</p>
-          <p><small>Exchange</small><br/>{ exchangeBalances && exchangeBalances[1] }</p>
+          <p><small>Token</small><br /><img src={eth} alt="Token Logo" />{symbols && symbols[1]}</p>
+          <p><small>Wallet</small><br />{tokenBalances && tokenBalances[1]}</p>
+          <p><small>Exchange</small><br />{exchangeBalances && exchangeBalances[1]}</p>
         </div>
 
         <form onSubmit={isDeposit ? (e) => depositHandler(e, tokens[1]) : (e) => withdrawHandler(e, tokens[1])}>
-          <label htmlFor="token1"></label>
-          <input 
-            type="text" 
-            id='token1' 
+          <label htmlFor="token1">{symbols && symbols[1]} Amount</label>
+          <input
+            type="text"
+            id='token1'
             placeholder='0.0000'
             value={token2TransferAmount === 0 ? '' : token2TransferAmount}
             onChange={(e) => amountHandler(e, tokens[1])}
           />
 
           <button className='button' type='submit'>
-            { isDeposit ? <span>Deposit</span> : <span>Withdraw</span> }
+            {isDeposit ? (
+                <span>Deposit</span>
+            ) : (
+                <span>Withdraw</span>
+            )}
           </button>
         </form>
       </div>

@@ -12,15 +12,15 @@ import {
   subscribeToEvents
  } from '../store/interactions';
 
-import Balance from './Balance';
-import Markets from './Markets';
-
 import Navbar from './Navbar';
+import Markets from './Markets';
+import Balance from './Balance';
 import Order from './Order';
 import OrderBook from './OrderBook';
 import PriceChart from './PriceChart';
 import Trades from './Trades';
 import Transactions from './Transactions';
+import Alert from './Alert';
 
 function App() {
 
@@ -73,7 +73,7 @@ function App() {
           <OrderBook/>
         </section>
       </main>
-      {/* Alert */}
+      <Alert/>
     </div>
   );
 }
